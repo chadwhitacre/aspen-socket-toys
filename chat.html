@@ -1,0 +1,46 @@
+<head>
+    <title>Greetings, program!</title>
+    <style>@import url("/socket-toys.css");</style>
+</head>
+<body>
+    <h1>Aspen Socket Toys</h1>
+    <a href="/">echo</a>,
+    <a href="/top.html">top</a>,
+    <a href="chat">chat</a>
+    <p><input /></p>
+    <div id="messages"></div>
+</body>
+<script src="/jquery-1.6.1.min.js"></script>
+<script src="/socket.io-client/dist/socket.io.js"></script>
+<script>
+    var App = {};
+
+    App.chat = function(e)
+    {
+        if (e.which !== 13) // return
+            return;
+        var value = $(this).val();
+        $(this).val('');
+        App.socket.send(value);
+    };
+
+    App.chated = function(message)
+    {
+        App.$messages.append('<p>'+message+'</p>');
+    };
+
+    $(document).ready(function() {
+        App.$messages = $('#messages');
+        App.$input = $('input');
+        App.$input.keyup(App.chat);
+        App.$input.focus();
+
+        App.socket = io.connect( '/chat.sock'
+                               , { "resource": "chat.sock"
+                                 , "transports": ["xhr-polling"]
+                                  }
+                                );
+        App.socket.on('message', App.chated)
+
+    });
+</script>

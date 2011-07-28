@@ -1,7 +1,7 @@
 import commands
 
 
-cmd = """ps aux -r | head -n11 | tail -n10"""
+cmd = "ps aux -r | head -n11 | tail -n10"
 output = commands.getoutput(cmd)
 top = {}
 for line in output.splitlines():
@@ -10,6 +10,9 @@ for line in output.splitlines():
     cpu = parts[2]
     mem = parts[3]
     top[pid] = [cpu, mem]
+top['foo'] = [100, 100]
+top['bar'] = [10, 10]
+top['baz'] = [1, 1]
+top['buz'] = [.1, .1]
 socket.send_json(top)
-socket.sleep(1)
-
+socket.sleep(2)

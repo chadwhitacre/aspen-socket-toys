@@ -1,3 +1,48 @@
+<!--
+
+1:1 - private message, stock ticker
+1:N - facebook/twitter stream
+N:N - group chat
+
+echo
+private message
+group chat
+notifications
+monitoring
+
+
+/echo.sock - opens a new channel for every connection
+
+I send to a channel, I get a reply on the same channel. Someone else opens a
+socket, it creates a new channel. They send to their channel, they get a reply
+on their channel.
+
+
+/msg.sock - opens a channel for every two connections
+
+Jack and Jill hit msg.sock and it opens one channel. Jack sends, Jill recvs.
+Jill sends, Jack recvs. Fred and Barny hit msg.sock and it opens a second
+channel.
+
+
+/ps.sock - uses a single channel for all connections
+
+Jack, Jill, Fred, and Barney all open connections. Messages published go to all
+of them.
+
+
+/stream.sock - uses a channel for each user
+
+Jack opens a connection, he uses a new channel. Jill opens four connections,
+they all reuse one new channel.
+
+
+/chat.sock - one channel per ... channel
+
+Jack, Jill, Fred, and Barney all open connections. Messages published go to all
+of them.
+
+-->
 <head>
     <title>Greetings, program!</title>
     <script src="/jquery-1.6.1.min.js"></script>
@@ -43,6 +88,7 @@
 
         });
     </script>
+    <style>@import url("/socket-toys.css");</style>
 </head>
 <body>
     <h1>Aspen Socket Toys</h1>

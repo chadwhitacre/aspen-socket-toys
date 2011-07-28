@@ -1,3 +1,5 @@
 socket.send("Greetings, program!")
+socket.send("I come from across the sea.")
+socket.send("Type something at me.")
 
 socket.send(socket.recv())

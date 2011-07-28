@@ -1,0 +1,5 @@
+username = 'foo' #request.qs.one('username')
+
+msg = socket.recv() # gets the next message from any client
+channel.send('<b>' + username + '</b>: ' + msg) # sends the message to all clients
+socket.send('<b>' + 'you' + '</b>: ' + msg) # sends the message to all clients
