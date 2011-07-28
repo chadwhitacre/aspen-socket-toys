@@ -1,5 +1,14 @@
-username = 'foo' #request.qs.one('username')
-
-msg = socket.recv() # gets the next message from any client
-channel.send('<b>' + username + '</b>: ' + msg) # sends the message to all clients
-socket.send('<b>' + 'you' + '</b>: ' + msg) # sends the message to all clients
+# Get the next message from this client.
+# ======================================
+# Every client has their own copy of /chat.sock exec'ing in a loop. The socket
+# object gives you access to each individual client connected to this resource.
+
+message = socket.recv()
+
+
+# Send the message to all clients.
+# ================================
+# The channel object gives you access to all clients connected to this 
+# resource.
+
+channel.send_json(message)

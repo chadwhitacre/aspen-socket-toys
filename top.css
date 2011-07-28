@@ -1,0 +1,58 @@
+#chart {
+    position: relative;
+}
+#plot {
+    height: 400px;
+    width: 400px;
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    border: 1px solid #CCC;
+    border-style: none none solid solid;
+}
+#plot SPAN {
+    display: block;
+    position: absolute;
+    font: normal 9px/9px Monaco, "Lucida Sans", monospace;
+}
+.label {
+    font: normal 9px/9px Monaco, "Lucida Sans", monospace;
+    display: block;
+    position: absolute;
+    color: #CCC;
+}
+.y-axis {
+    top: 250px;
+    left: 0px;
+}
+.x-axis {
+    top: 475px;
+    left: 230px;
+}
+#y {
+    height: 400px;
+    width: 30px;
+    position: absolute;
+    top: 50px;
+    left: 20px;
+}
+#x {
+    height: 9px;
+    width: 400px;
+    position: absolute;
+    top: 451px;
+    left: 50px;
+}
+#y SPAN { text-align: right; }
+#x SPAN { text-align: center; }
+.ticks {
+    color: #CCC;
+}
+.ticks SPAN {
+    display: block;
+    position: absolute;
+    font: normal 9px/9px Monaco, "Lucida Sans", monospace;
+    width: 30px;
+    background: white;
+}
+

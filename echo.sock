@@ -1,5 +1,7 @@
-socket.send("Greetings, program!")
-socket.send("I come from across the sea.")
-socket.send("Type something at me.")
-
+# Aspen represents all HTTP resources as files on your filesystem. Socket
+# resources are any files named *.sock. They are Python files that are exec'd
+# continously while a socket is open. Inside of a socket resource you have a
+# socket object with send and recv methods that enables you to communicate with
+# each connected client.
+
 socket.send(socket.recv())

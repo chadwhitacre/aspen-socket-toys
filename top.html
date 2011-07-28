@@ -1,138 +1,13 @@
+
 <head>
     <title>Top</title>
-    <script src="/jquery-1.6.1.min.js"></script>
-    <script src="/socket.io-client/dist/socket.io.js"></script>
-    <script>
-        var App = {};
-
-        App.log10 = function(x)
-        {
-            return Math.log(x) / Math.log(10);
-        };
-    
-        App.scale = function(i)
-        {
-            return 400 * ((App.log10(i) + 1) / 3);
-        };
-
-        App.drawOne = function(data, pid)
-        {
-            var vals = data[pid],
-                cpu = vals[0],
-                mem = vals[1],
-                x = 0,
-                y = 0,
-                h = 0,
-                w = 0;
-                label = null;
-
-            label = $(document.createElement('span')).text(pid);
-            y_label = $(document.createElement('span')).text(cpu);
-            x_label = $(document.createElement('span')).text(mem);
-
-            x = App.scale(mem);
-            y = 400 - App.scale(cpu);
-            label.css({'top': y, 'left': x});
-            App.$plot.append(label);
-
-            y_label.css('top', y);
-            App.$y.append(y_label);
-
-            x_label.css('left', x);
-            App.$x.append(x_label);
-        };
-
-        App.redraw = function(data)
-        {
-            App.$plot.empty();
-            App.$x.empty();
-            App.$y.empty();
-            var pid = null;
-            for (pid in data)
-                App.drawOne(data, pid);
-        };
-
-        App.main = function()
-        {
-            socket = io.connect( '/ps.sock'
-                               , { "resource": "ps.sock"
-                                 , "transports": ["xhr-polling"]
-                                  }
-                                );
-            socket.on('message', App.redraw);
-            App.$plot = $('#plot');
-            App.$y = $('#y');
-            App.$x = $('#x');
-        };
-
-        $(document).ready(App.main);
-    </script>
     <style>
-        #chart {
-            position: relative;
-        }
-        #plot {
-            height: 400px;
-            width: 400px;
-            position: absolute;
-            top: 50px;
-            left: 50px;
-            border: 1px solid #CCC;
-            border-style: none none solid solid;
-        }
-        #plot SPAN {
-            display: block;
-            position: absolute;
-            font: normal 9px/9px Monaco, "Lucida Sans", monospace;
-        }
-        .label {
-            font: normal 9px/9px Monaco, "Lucida Sans", monospace;
-            display: block;
-            position: absolute;
-            color: #CCC;
-        }
-        .y-axis {
-            top: 250px;
-            left: 0px;
-        }
-        .x-axis {
-            top: 475px;
-            left: 230px;
-        }
-        #y {
-            height: 400px;
-            width: 30px;
-            position: absolute;
-            top: 50px;
-            left: 20px;
-        }
-        #x {
-            height: 9px;
-            width: 400px;
-            position: absolute;
-            top: 451px;
-            left: 50px;
-        }
-        #y SPAN { text-align: right; }
-        #x SPAN { text-align: center; }
-        .ticks {
-            color: #CCC;
-        }
-        .ticks SPAN {
-            display: block;
-            position: absolute;
-            font: normal 9px/9px Monaco, "Lucida Sans", monospace;
-            width: 30px;
-            background: white;
-        }
+        @import url("/socket-toys.css");
+        @import url("/top.css");
     </style>
-    <style>@import url("/socket-toys.css");</style>
 </head>
 <body>
-    <h1>Aspen Socket Toys</h1>
-    <a href="/">echo</a>,
-    <a href="/top.html">top</a>,
-    <a href="chat">chat</a>
+    {% include "header.html %}
     <div id="chart">
         <span class="y-axis label">CPU</span>
         <span class="x-axis label">Memory</span>
@@ -141,4 +16,73 @@
         <div id="x" class="ticks"></div>
     </div>
 </body>
+<script src="/jquery-1.6.1.min.js"></script>
+<script src="/socket.io-client/dist/socket.io.js"></script>
+<script>
+    var App = {};
+
+    App.log10 = function(x)
+    {
+        return Math.log(x) / Math.log(10);
+    };
+
+    App.scale = function(i)
+    {
+        return 400 * ((App.log10(i) + 1) / 3);
+    };
+
+    App.drawOne = function(data, pid)
+    {
+        var vals = data[pid],
+            cpu = vals[0],
+            mem = vals[1],
+            x = 0,
+            y = 0,
+            h = 0,
+            w = 0;
+            label = null;
+
+        label = $(document.createElement('span')).text(pid);
+        y_label = $(document.createElement('span')).text(cpu);
+        x_label = $(document.createElement('span')).text(mem);
+
+        x = App.scale(mem);
+        y = 400 - App.scale(cpu);
+        label.css({'top': y, 'left': x});
+        App.$plot.append(label);
+
+        y_label.css('top', y);
+        App.$y.append(y_label);
+
+        x_label.css('left', x);
+        App.$x.append(x_label);
+    };
+
+    App.redraw = function(data)
+    {
+        App.$plot.empty();
+        App.$x.empty();
+        App.$y.empty();
+        var pid = null;
+        for (pid in data)
+            App.drawOne(data, pid);
+    };
+
+    App.main = function()
+    {
+        $('#nav .top').wrap('<b>');
+
+        socket = io.connect( '/ps.sock'
+                           , { "resource": "ps.sock"
+                             , "transports": ["xhr-polling"]
+                              }
+                            );
+        socket.on('message', App.redraw);
+        App.$plot = $('#plot');
+        App.$y = $('#y');
+        App.$x = $('#x');
+    };
+
+    $(document).ready(App.main);
+</script>
 
