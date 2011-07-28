@@ -21,7 +21,7 @@ PRE {
     background: #eee;
     padding: 5px;
     font: normal 10px/12px Monaco, "Lucida Console", monospace;
-    overflow: scroll;
+    overflow: auto;
 }
 P {
     padding: 0 0 1em;
