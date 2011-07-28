@@ -1,0 +1,15 @@
+import commands
+
+
+cmd = """ps aux -r | head -n11 | tail -n10"""
+output = commands.getoutput(cmd)
+top = {}
+for line in output.splitlines():
+    parts = line.split(None, 4)
+    pid = parts[1]
+    cpu = parts[2]
+    mem = parts[3]
+    top[pid] = [cpu, mem]
+socket.send_json(top)
+socket.sleep(1)
+

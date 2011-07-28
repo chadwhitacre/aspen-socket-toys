@@ -1,0 +1,54 @@
+<head>
+    <title>Greetings, program!</title>
+    <script src="/jquery-1.6.1.min.js"></script>
+    <script src="/socket.io-client/dist/socket.io.js"></script>
+    <script>
+        var App = {};
+
+        App.handle = undefined;
+
+        App.start = function() 
+        {
+            App.socket.send('ping');
+            App.handle = setTimeout(App.start, 4000);
+            App.$button.html('Stop');
+        };
+
+        App.echo = function(e)
+        {
+            if (e.which !== 13) // return
+                return;
+            var value = $(this).val();
+            $(this).val('');
+            App.socket.send(value);
+        };
+
+        App.echoed = function(message)
+        {
+            App.$messages.append('<p>'+message+'</p>');
+        };
+
+        $(document).ready(function() {
+            App.$messages = $('#messages');
+            App.$input = $('input');
+            App.$input.keyup(App.echo);
+            App.$input.focus();
+
+            App.socket = io.connect( '/echo.sock'
+                                   , { "resource": "echo.sock"
+                                     , "transports": ["xhr-polling"]
+                                      }
+                                    );
+            App.socket.on('message', App.echoed)
+
+        });
+    </script>
+</head>
+<body>
+    <h1>Aspen Socket Toys</h1>
+    <a href="/">echo</a>,
+    <a href="/top.html">top</a>,
+    <a href="chat">chat</a>
+    <p><input /></p>
+    <div id="messages"></div>
+</body>

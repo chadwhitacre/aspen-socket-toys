@@ -1,0 +1,3 @@
+socket.send("Greetings, program!")
+
+socket.send(socket.recv())
