@@ -4,8 +4,11 @@ filename = "chat.sock"
     <title>Greetings, program!</title>
     <style>@import url("/socket-toys.css");</style>
     <style>
-        #messages P {
+        #messages {
             padding: 0 0 60px;
+        }
+        #messages P {
+            padding: 0;
         }
         #input {
             position: fixed;
@@ -40,14 +43,17 @@ filename = "chat.sock"
         var data = {}
         data.username = App.username;
         data.message = $(this).val();
-
-        App.postMessage(data);
-        App.socket.json.send(data);
-
-        $(this).val('');
+        if (data.message.length > 512)
+        {
+            alert("Messages are limited to 512 characters, sorry.");
+        } else {
+            App.postMessage(data);
+            App.socket.json.send(data);
+            $(this).val('');
+        }
     };
 
-    App.changeUsername = function() 
+    App.changeUsername = function()
     {
         var newUsername = prompt("Username?");
         if (newUsername !== null)
@@ -55,8 +61,13 @@ filename = "chat.sock"
             newUsername = newUsername.trim();
             if (newUsername !== "")
             {
-                App.username = newUsername;
-                App.$username.text(App.esc(newUsername));
+                if (newUsername.length > 64)
+                {
+                    alert("Usernames are limited to 64 characters, sorry.");
+                } else {
+                    App.username = newUsername;
+                    App.$username.text(App.esc(newUsername));
+                }
             }
         }
     };
@@ -78,7 +89,10 @@ filename = "chat.sock"
                             + '<b>'+App.esc(data.username)+'</b>: '
                             + App.esc(data.message)
                             + '</p>' 
-                             );
+                            );
+
+        // http://stackoverflow.com/questions/1890995/
+        $("html, body").animate({ scrollTop: $(document).height() }, "slow");
     };
 
     App.resize = function()
@@ -97,8 +111,9 @@ filename = "chat.sock"
         App.$input.keyup(App.send);
         App.$input.val('Enter messages here.');
         App.$input.focus();
+        App.username = 'anon-' + Math.floor(Math.random()*101).toString();
         App.$username = $('button');
-        App.$username.text('anon-' + Math.floor(Math.random()*101).toString());
+        App.$username.text(App.username);
         App.$username.click(App.changeUsername);
 
         App.socket = io.connect( '/chat.sock'
