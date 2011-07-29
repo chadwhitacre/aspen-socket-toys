@@ -5,7 +5,7 @@ filename = "chat.sock"
     <style>@import url("/socket-toys.css");</style>
     <style>
         #messages P {
-            padding: 0;
+            padding: 0 0 60px;
         }
         #input {
             position: fixed;
@@ -95,6 +95,7 @@ filename = "chat.sock"
         App.$messages = $('#messages');
         App.$input = $('input');
         App.$input.keyup(App.send);
+        App.$input.val('Enter messages here.');
         App.$input.focus();
         App.$username = $('button');
         App.$username.text('anon-' + Math.floor(Math.random()*101).toString());
