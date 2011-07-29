@@ -7,6 +7,15 @@ filename = "chat.sock"
         #messages P {
             padding: 0;
         }
+        #input {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 20px;
+            background: #B8E273;
+        }
+        #input INPUT {
+        }
     </style>
 </head>
 <body>
@@ -15,7 +24,7 @@ filename = "chat.sock"
     <p>Your username is <button></button>. Anyone with this page open will see
     your messages.</p>
 
-    <p><input /></p>
+    <div id="input"><input /></div>
     <div id="messages"></div>
 </body>
 <script src="/jquery-1.6.1.min.js"></script>
@@ -32,6 +41,7 @@ filename = "chat.sock"
         data.message = $(this).val();
         data.username = App.$username.text();
 
+        App.postMessage(data);
         App.socket.json.send(data);
 
         $(this).val('');
@@ -41,7 +51,6 @@ filename = "chat.sock"
     App.changeUsername = function() 
     {
         var newUsername = prompt("Username?");
-        console.log(newUsername);
         if (newUsername !== null && newUsername.trim() !== "")
         {
             var escaped = $('<div>').text(newUsername).html();
@@ -51,7 +60,12 @@ filename = "chat.sock"
 
     App.recv = function(data)
     {
-        console.log(data);
+        if (data.username !== App.$username.text())
+            App.postMessage(data);
+    };
+
+    App.postMessage = function(data)
+    {
         App.$messages.append( '<p>'
                             + '<b>'+data.username+'</b>: '
                             + data.message
@@ -59,9 +73,16 @@ filename = "chat.sock"
                              );
     };
 
+    App.resize = function()
+    {
+        $('INPUT').width($(window).width() - 40)
+    };
+
     App.main = function()
     {
         $('.chat').wrap('<b>');
+        $(window).resize(App.resize);
+        App.resize();
 
         App.$messages = $('#messages');
         App.$input = $('input');
