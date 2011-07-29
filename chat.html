@@ -35,47 +35,55 @@ filename = "chat.sock"
     App.send = function(e)
     {
         if (e.which !== 13) // return
-        return;
+            return;
 
         var data = {}
+        data.username = App.username;
         data.message = $(this).val();
-        data.username = App.$username.text();
 
         App.postMessage(data);
         App.socket.json.send(data);
 
         $(this).val('');
-
     };
 
     App.changeUsername = function() 
     {
         var newUsername = prompt("Username?");
-        if (newUsername !== null && newUsername.trim() !== "")
+        if (newUsername !== null)
         {
-            var escaped = $('<div>').text(newUsername).html();
-            App.$username.text(escaped);
+            newUsername = newUsername.trim();
+            if (newUsername !== "")
+            {
+                App.username = newUsername;
+                App.$username.text(App.esc(newUsername));
+            }
         }
     };
 
     App.recv = function(data)
     {
-        if (data.username !== App.$username.text())
+        if (data.username !== App.username)
             App.postMessage(data);
+    };
+
+    App.esc = function(s)
+    {
+        return $('<div>').text(s).html();
     };
 
     App.postMessage = function(data)
     {
         App.$messages.append( '<p>'
-                            + '<b>'+data.username+'</b>: '
-                            + data.message
+                            + '<b>'+App.esc(data.username)+'</b>: '
+                            + App.esc(data.message)
                             + '</p>' 
                              );
     };
 
     App.resize = function()
     {
-        $('INPUT').width($(window).width() - 40)
+        $('INPUT').width($(window).width() - 40);
     };
 
     App.main = function()
@@ -97,7 +105,7 @@ filename = "chat.sock"
                                  , "transports": ["xhr-polling"]
                                   }
                                 );
-        App.socket.on('message', App.recv)
+        App.socket.on('message', App.recv);
     };
 
     $(document).ready(App.main);
